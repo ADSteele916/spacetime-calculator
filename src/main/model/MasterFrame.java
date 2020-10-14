@@ -17,10 +17,15 @@ public class MasterFrame extends ReferenceFrame {
         return new ArrayList<>(relativeFrames);
     }
 
+    // MODIFIES: this
+    // EFFECTS: adds a relative frame to the list of frames defined relative to this frame
     protected void addRelativeFrame(RelativeFrame frame) {
         relativeFrames.add(frame);
     }
 
+    // REQUIRES: no events are defined in frame
+    // MODIFIES: this
+    // EFFECTS: removes a relative frame from the list of frames defined relative to this frame if it is on it
     public void removeRelativeFrame(RelativeFrame frame) {
         relativeFrames.remove(frame);
     }

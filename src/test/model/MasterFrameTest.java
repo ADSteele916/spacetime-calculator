@@ -40,6 +40,21 @@ class MasterFrameTest {
     }
 
     @Test
+    void testRemoveRelativeFrame() {
+        RelativeFrame frame1 = masterFrame.boost("rf1", 0.2);
+        RelativeFrame frame2 = masterFrame.boost("rf2", -0.5);
+        assertEquals(2, masterFrame.getRelativeFrames().size());
+        masterFrame.removeRelativeFrame(frame2);
+        assertEquals(1, masterFrame.getRelativeFrames().size());
+        assertEquals(frame1, masterFrame.getRelativeFrames().get(0));
+        masterFrame.removeRelativeFrame(frame2);
+        assertEquals(1, masterFrame.getRelativeFrames().size());
+        masterFrame.removeRelativeFrame(frame1);
+        assertEquals(0, masterFrame.getRelativeFrames().size());
+
+    }
+
+    @Test
     void testGetVelocity() {
         assertEquals(0, masterFrame.getVelocity(), ALLOWED_DELTA);
     }
