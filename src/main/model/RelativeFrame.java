@@ -12,6 +12,7 @@ public class RelativeFrame extends ReferenceFrame implements Writable {
         this.masterFrame = masterFrame;
     }
 
+    // EFFECTS: returns the master frame that this frame is defined relative to
     public MasterFrame getMasterFrame() {
         return masterFrame;
     }

@@ -53,6 +53,7 @@ public class World implements Writable {
         return jsonObject;
     }
 
+    // EFFECTS: returns a JSONArray of JSON objects for the world's reference frames
     private JSONArray framesToJson() {
         JSONArray jsonArray = new JSONArray();
         for (RelativeFrame frame: this.getFrames()) {
@@ -61,6 +62,7 @@ public class World implements Writable {
         return jsonArray;
     }
 
+    // EFFECTS: returns a JSONArray of JSON objects for the world's events
     private JSONArray eventsToJson() {
         JSONArray jsonArray = new JSONArray();
         for (Event event: this.getEvents()) {

@@ -1,9 +1,7 @@
 package persistence;
 
 import model.World;
-import model.exceptions.InvalidDataException;
-import model.exceptions.NameInUseException;
-import org.junit.jupiter.api.BeforeEach;
+import persistence.exceptions.InvalidDataException;
 import org.junit.jupiter.api.Test;
 
 import java.io.IOException;

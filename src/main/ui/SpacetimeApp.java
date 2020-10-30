@@ -1,7 +1,7 @@
 package ui;
 
 import model.*;
-import model.exceptions.InvalidDataException;
+import persistence.exceptions.InvalidDataException;
 import model.exceptions.NameInUseException;
 import persistence.JsonReader;
 import persistence.JsonWriter;

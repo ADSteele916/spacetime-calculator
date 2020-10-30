@@ -1,4 +1,4 @@
-package model.exceptions;
+package persistence.exceptions;
 
 public class InvalidDataException extends RuntimeException {
     public InvalidDataException() {

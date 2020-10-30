@@ -93,7 +93,6 @@ class MasterFrameTest {
 
     @Test
     void testBoostFail() {
-        RelativeFrame boostedFrame = null;
         try {
             masterFrame.boost("bf", 0.4);
             masterFrame.boost("bf", 0.4);
