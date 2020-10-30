@@ -1,5 +1,7 @@
 package model;
 
+import model.exceptions.NameInUseException;
+
 public abstract class ReferenceFrame {
     private String name;
     private double relativeVelocity;
@@ -22,7 +24,7 @@ public abstract class ReferenceFrame {
 
     // REQUIRES: -1 < v < 1
     // EFFECTS: returns a new relative frame with given name boosted from this at velocity v*c
-    public abstract RelativeFrame boost(String name, double v);
+    public abstract RelativeFrame boost(String name, double v) throws NameInUseException;
 
     // REQUIRES: frame is this or has same parent as this
     // EFFECTS: returns the velocity of this frame relative to given frame

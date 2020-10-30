@@ -1,0 +1,23 @@
+{
+    "frames": [],
+    "events": [
+        {
+            "name": "Event1",
+            "x": 3,
+            "time": 2,
+            "frame": "Stationary Frame"
+        },
+        {
+            "name": "Event2",
+            "x": -2,
+            "time": 6,
+            "frame": "Frame1"
+        },
+        {
+            "name": "Event3",
+            "x": 0,
+            "time": 9,
+            "frame": "Frame4"
+        }
+    ]
+}

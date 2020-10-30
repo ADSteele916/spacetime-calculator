@@ -1,7 +1,11 @@
 package model;
 
+import model.exceptions.NameInUseException;
+
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class MasterFrame extends ReferenceFrame {
     private List<RelativeFrame> relativeFrames;
@@ -15,6 +19,15 @@ public class MasterFrame extends ReferenceFrame {
     // EFFECTS: returns a list of frames defined relative to this frame
     public List<RelativeFrame> getRelativeFrames() {
         return new ArrayList<>(relativeFrames);
+    }
+
+    // EFFECTS: returns a list of the names used by frames defined relative to this frame
+    protected Set<String> getFrameNames() {
+        Set<String> names = new HashSet<>();
+        for (RelativeFrame frame: getRelativeFrames()) {
+            names.add(frame.getName());
+        }
+        return names;
     }
 
     // MODIFIES: this
@@ -31,7 +44,10 @@ public class MasterFrame extends ReferenceFrame {
     }
 
     @Override
-    public RelativeFrame boost(String name, double v) {
+    public RelativeFrame boost(String name, double v) throws NameInUseException {
+        if (getFrameNames().contains(name)) {
+            throw new NameInUseException();
+        }
         RelativeFrame frame = new RelativeFrame(name, v, this);
         addRelativeFrame(frame);
         return frame;

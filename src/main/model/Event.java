@@ -1,8 +1,11 @@
 package model;
 
+import org.json.JSONObject;
+import persistence.Writable;
+
 import static model.World.ALLOWED_DELTA;
 
-public class Event {
+public class Event implements Writable {
     private String name;
     private double time;
     private double posX;
@@ -75,5 +78,15 @@ public class Event {
         this.time = transformedEvent.getTime();
         this.posX = transformedEvent.getX();
         this.frame = frame;
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("name", this.getName());
+        jsonObject.put("time", this.getTime());
+        jsonObject.put("x", this.getX());
+        jsonObject.put("frame", this.getFrame().getName());
+        return jsonObject;
     }
 }

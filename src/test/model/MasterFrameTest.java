@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -27,22 +28,39 @@ class MasterFrameTest {
 
     @Test
     void testGetRelativeFramesOne() {
-        masterFrame.boost("rf1", 0.2);
+        try {
+            masterFrame.boost("rf1", 0.2);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(1, masterFrame.getRelativeFrames().size());
     }
 
     @Test
     void testGetRelativeFramesMany() {
-        masterFrame.boost("rf1", 0.2);
-        masterFrame.boost("rf2", -0.9);
-        masterFrame.boost("rf3", 0.64);
+        try {
+            masterFrame.boost("rf1", 0.2);
+            masterFrame.boost("rf2", -0.9);
+            masterFrame.boost("rf3", 0.64);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(3, masterFrame.getRelativeFrames().size());
     }
 
     @Test
     void testRemoveRelativeFrame() {
-        RelativeFrame frame1 = masterFrame.boost("rf1", 0.2);
-        RelativeFrame frame2 = masterFrame.boost("rf2", -0.5);
+        RelativeFrame frame1 = null;
+        RelativeFrame frame2 = null;
+        try {
+            frame1 = masterFrame.boost("rf1", 0.2);
+            frame2 = masterFrame.boost("rf2", -0.5);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(2, masterFrame.getRelativeFrames().size());
         masterFrame.removeRelativeFrame(frame2);
         assertEquals(1, masterFrame.getRelativeFrames().size());
@@ -60,11 +78,29 @@ class MasterFrameTest {
     }
 
     @Test
-    void testBoost() {
-        RelativeFrame boostedFrame = masterFrame.boost("bf", 0.4);
+    void testBoostSuccess() {
+        RelativeFrame boostedFrame = null;
+        try {
+            boostedFrame = masterFrame.boost("bf", 0.4);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(1, masterFrame.getRelativeFrames().size());
         assertEquals(0.4, boostedFrame.getVelocity());
         assertEquals(masterFrame, boostedFrame.getMasterFrame());
+    }
+
+    @Test
+    void testBoostFail() {
+        RelativeFrame boostedFrame = null;
+        try {
+            masterFrame.boost("bf", 0.4);
+            masterFrame.boost("bf", 0.4);
+            fail();
+        } catch (NameInUseException e) {
+            // pass
+        }
     }
 
     @Test
@@ -74,7 +110,13 @@ class MasterFrameTest {
 
     @Test
     void testGetRelativeVelocityToOther() {
-        RelativeFrame boostedFrame = masterFrame.boost("bf", 0.39);
+        RelativeFrame boostedFrame = null;
+        try {
+            boostedFrame = masterFrame.boost("bf", 0.39);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(-0.39, masterFrame.relativeVelocityTo(boostedFrame), ALLOWED_DELTA);
     }
 }

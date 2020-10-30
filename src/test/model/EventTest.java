@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,7 +18,12 @@ class EventTest {
     @BeforeEach
     void setUp() {
         masterFrame = new MasterFrame();
-        relativeFrame = masterFrame.boost("rf",0.6);
+        try {
+            relativeFrame = masterFrame.boost("rf",0.6);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         event1 = new Event("event1", 0, 0, masterFrame);
         event2 = new Event("event2", 9, 4, masterFrame);
         event3 = new Event("event3", 1, 5, relativeFrame);
@@ -111,7 +117,13 @@ class EventTest {
 
     @Test
     void testIsSimultaneousSuccess() {
-        RelativeFrame simultaneousFrame = masterFrame.boost("sf",5.0 / 7.0);
+        RelativeFrame simultaneousFrame = null;
+        try {
+            simultaneousFrame = masterFrame.boost("sf",5.0 / 7.0);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertTrue(event1.isSimultaneous(event3, simultaneousFrame));
         assertTrue(event3.isSimultaneous(event1, simultaneousFrame));
     }
@@ -134,7 +146,13 @@ class EventTest {
 
     @Test
     void testIsSamePlaceSuccess() {
-        RelativeFrame samePlaceFrame = masterFrame.boost("spf", -3.0 / 4.0);
+        RelativeFrame samePlaceFrame = null;
+        try {
+            samePlaceFrame = masterFrame.boost("spf", -3.0 / 4.0);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertTrue(event2.isSamePlace(event3, samePlaceFrame));
         assertTrue(event3.isSamePlace(event2, samePlaceFrame));
 

@@ -1,7 +1,13 @@
 package ui;
 
 import model.*;
+import model.exceptions.InvalidDataException;
+import model.exceptions.NameInUseException;
+import persistence.JsonReader;
+import persistence.JsonWriter;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -11,13 +17,18 @@ import static model.World.ALLOWED_DELTA;
 
 // Structure of runApp, showCommands, and execute methods from TellerApp example
 public class SpacetimeApp {
+    private static final String JSON_STORE = "./data/world.json";
     private World world;
     private Scanner input;
+    private JsonReader jsonReader;
+    private JsonWriter jsonWriter;
 
     // EFFECTS: set up and run the spacetime application
     public SpacetimeApp() {
         world = new World();
         input = new Scanner(System.in);
+        jsonReader = new JsonReader(JSON_STORE);
+        jsonWriter = new JsonWriter(JSON_STORE);
         runApp();
     }
 
@@ -52,6 +63,8 @@ public class SpacetimeApp {
         System.out.println("\t re: Remove an event");
         System.out.println("\t ve: View all events from a certain frame");
         System.out.println("\t li: Calculate the Lorentz Invariant of two events");
+        System.out.println("\t s: Save the world to file");
+        System.out.println("\t l: Load the world from file");
         System.out.println("\t exit: Exit the program");
     }
 
@@ -73,11 +86,11 @@ public class SpacetimeApp {
         } else if (command.equals("ve")) {
             viewEvents();
         } else if (command.equals("li")) {
-            if (world.getEvents().isEmpty()) {
-                System.out.println("You don't have any events to get the Lorentz Invariant of!");
-            } else {
-                lorentzInvariant();
-            }
+            lorentzInvariant();
+        } else if (command.equals("s")) {
+            saveWorld();
+        } else if (command.equals("l")) {
+            loadWorld();
         } else {
             System.out.println("Command not recognized.");
         }
@@ -111,8 +124,13 @@ public class SpacetimeApp {
         String name = selectString("What is the name of this frame?");
         ReferenceFrame frame = selectFrame("What frame are you defining this frame relative to?");
         double v = selectDouble("How fast is this frame moving (as a fraction of c)?", -1, 1);
-        frame.boost(name, v);
-        System.out.println("Frame added!");
+        try {
+            frame.boost(name, v);
+            System.out.println("Frame added!");
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            System.out.println("A frame with that name already exists!");
+        }
     }
 
     // MODIFIES: this
@@ -180,6 +198,29 @@ public class SpacetimeApp {
                 separation = "timelike";
             }
             System.out.println("This means that the two events are " + separation + " separated.");
+        }
+    }
+
+    // EFFECTS: saves the world to file
+    private void saveWorld() {
+        try {
+            jsonWriter.open();
+            jsonWriter.write(world);
+            jsonWriter.close();
+            System.out.println("Saved world to " + JSON_STORE);
+        } catch (FileNotFoundException e) {
+            System.out.println("Unable to write to file: " + JSON_STORE);
+        }
+    }
+
+    // MODIFIES: this
+    // EFFECTS: loads world from file
+    private void loadWorld() {
+        try {
+            world = jsonReader.read();
+            System.out.println("Loaded world from " + JSON_STORE);
+        } catch (IOException | InvalidDataException e) {
+            System.out.println("Unable to read from file: " + JSON_STORE);
         }
     }
 

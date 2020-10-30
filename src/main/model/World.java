@@ -1,9 +1,13 @@
 package model;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
+import persistence.Writable;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class World {
+public class World implements Writable {
 
     public static final double ALLOWED_DELTA = 0.000001;
 
@@ -39,5 +43,29 @@ public class World {
 
     public void removeEvent(Event event) {
         events.remove(event);
+    }
+
+    @Override
+    public JSONObject toJson() {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("frames", this.framesToJson());
+        jsonObject.put("events", this.eventsToJson());
+        return jsonObject;
+    }
+
+    private JSONArray framesToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (RelativeFrame frame: this.getFrames()) {
+            jsonArray.put(frame.toJson());
+        }
+        return jsonArray;
+    }
+
+    private JSONArray eventsToJson() {
+        JSONArray jsonArray = new JSONArray();
+        for (Event event: this.getEvents()) {
+            jsonArray.put(event.toJson());
+        }
+        return jsonArray;
     }
 }

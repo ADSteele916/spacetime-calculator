@@ -18,3 +18,5 @@ As a student pursuing a combined honours in physics and computer science, I have
 * As a user, I want to be able to create an arbitrary number of reference frames moving relative to a stationary frame.
 * As a user, I want to be able to determine whether two events are timelike, spacelike, or null separated.
 * As a user, I want to be able to switch reference frames and see how an event's position and time change.
+* As a user, I want to be able to save a world's events and reference frames to file.
+* As a user, I want to be able to load a world's events and reference frames from file.

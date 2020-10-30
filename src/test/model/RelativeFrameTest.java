@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -14,7 +15,12 @@ class RelativeFrameTest {
     @BeforeEach
     void setUp() {
         masterFrame = new MasterFrame();
-        relativeFrame = masterFrame.boost("rf", 0.5);
+        try {
+            relativeFrame = masterFrame.boost("rf", 0.5);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
     }
 
     @Test
@@ -33,10 +39,27 @@ class RelativeFrameTest {
     }
 
     @Test
-    void testBoost() {
-        RelativeFrame boostedFrame = relativeFrame.boost("bf", 0.2);
+    void testBoostSuccess() {
+        RelativeFrame boostedFrame = null;
+        try {
+            boostedFrame = relativeFrame.boost("bf", 0.2);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(masterFrame, boostedFrame.getMasterFrame());
         assertEquals(7.0 / 11.0, boostedFrame.getVelocity(), ALLOWED_DELTA);
+    }
+
+    @Test
+    void testBoostFail() {
+        try {
+            RelativeFrame boostedFrame = relativeFrame.boost("bf", 0.2);
+            RelativeFrame boostedFrame2 = relativeFrame.boost("bf", 0.2);
+            fail();
+        } catch (NameInUseException e) {
+            // pass
+        }
     }
 
     @Test
@@ -51,13 +74,25 @@ class RelativeFrameTest {
 
     @Test
     void testRelativeVelocityToOtherInSameDirection() {
-        RelativeFrame frameInSameDirection = masterFrame.boost("fisd", 0.8);
+        RelativeFrame frameInSameDirection = null;
+        try {
+            frameInSameDirection = masterFrame.boost("fisd", 0.8);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(-0.5, relativeFrame.relativeVelocityTo(frameInSameDirection), ALLOWED_DELTA);
     }
 
     @Test
     void testRelativeVelocityToOtherInOppositeDirection() {
-        RelativeFrame frameInOtherDirection = masterFrame.boost("fiod", -0.5);
+        RelativeFrame frameInOtherDirection = null;
+        try {
+            frameInOtherDirection = masterFrame.boost("fiod", -0.5);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(0.8, relativeFrame.relativeVelocityTo(frameInOtherDirection), ALLOWED_DELTA);
     }
 }

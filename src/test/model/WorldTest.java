@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -22,16 +23,26 @@ class WorldTest {
 
     @Test
     void testGetFramesOne() {
-        world.getMasterFrame().boost("rf1", 0.5);
+        try {
+            world.getMasterFrame().boost("rf1", 0.5);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(1, world.getFrames().size());
         assertEquals(0.5, world.getFrames().get(0).getVelocity(), ALLOWED_DELTA);
     }
 
     @Test
     void testGetFramesMany() {
-        world.getMasterFrame().boost("rf1", 0.5);
-        world.getMasterFrame().boost("rf2", 0.75);
-        world.getMasterFrame().boost("rf3", -0.25);
+        try {
+            world.getMasterFrame().boost("rf1", 0.5);
+            world.getMasterFrame().boost("rf2", 0.75);
+            world.getMasterFrame().boost("rf3", -0.25);
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        }
         assertEquals(3, world.getFrames().size());
         assertEquals(0.5, world.getFrames().get(0).getVelocity(), ALLOWED_DELTA);
         assertEquals(0.75, world.getFrames().get(1).getVelocity(), ALLOWED_DELTA);
