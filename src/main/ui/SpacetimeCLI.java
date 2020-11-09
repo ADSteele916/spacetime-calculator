@@ -16,7 +16,7 @@ import static model.World.ALLOWED_DELTA;
 
 
 // Structure of runApp, showCommands, and execute methods from TellerApp example
-public class SpacetimeApp {
+public class SpacetimeCLI {
     private static final String JSON_STORE = "./data/world.json";
     private World world;
     private Scanner input;
@@ -24,7 +24,7 @@ public class SpacetimeApp {
     private JsonWriter jsonWriter;
 
     // EFFECTS: set up and run the spacetime application
-    public SpacetimeApp() {
+    public SpacetimeCLI() {
         world = new World();
         input = new Scanner(System.in);
         jsonReader = new JsonReader(JSON_STORE);
