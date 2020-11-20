@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.FasterThanLightException;
 import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,7 +18,7 @@ class RelativeFrameTest {
         masterFrame = new MasterFrame();
         try {
             relativeFrame = masterFrame.boost("rf", 0.5);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -43,7 +44,7 @@ class RelativeFrameTest {
         RelativeFrame boostedFrame = null;
         try {
             boostedFrame = relativeFrame.boost("bf", 0.2);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -52,12 +53,28 @@ class RelativeFrameTest {
     }
 
     @Test
-    void testBoostFail() {
+    void testBoostFailNameInUse() {
         try {
             RelativeFrame boostedFrame = relativeFrame.boost("bf", 0.2);
             RelativeFrame boostedFrame2 = relativeFrame.boost("bf", 0.2);
             fail();
         } catch (NameInUseException e) {
+            // pass
+        } catch (FasterThanLightException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    void testBoostFailFasterThanLight() {
+        try {
+            RelativeFrame boostedFrame = relativeFrame.boost("bf", 1.2);
+            fail();
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        } catch (FasterThanLightException e) {
             // pass
         }
     }
@@ -77,7 +94,7 @@ class RelativeFrameTest {
         RelativeFrame frameInSameDirection = null;
         try {
             frameInSameDirection = masterFrame.boost("fisd", 0.8);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -89,7 +106,7 @@ class RelativeFrameTest {
         RelativeFrame frameInOtherDirection = null;
         try {
             frameInOtherDirection = masterFrame.boost("fiod", -0.5);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }

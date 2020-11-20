@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.FasterThanLightException;
 import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -20,7 +21,7 @@ class EventTest {
         masterFrame = new MasterFrame();
         try {
             relativeFrame = masterFrame.boost("rf",0.6);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -120,7 +121,7 @@ class EventTest {
         RelativeFrame simultaneousFrame = null;
         try {
             simultaneousFrame = masterFrame.boost("sf",5.0 / 7.0);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -149,7 +150,7 @@ class EventTest {
         RelativeFrame samePlaceFrame = null;
         try {
             samePlaceFrame = masterFrame.boost("spf", -3.0 / 4.0);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -172,5 +173,12 @@ class EventTest {
         assertEquals(8.25, event2.getTime(), ALLOWED_DELTA);
         assertEquals(-1.75, event2.getX(), ALLOWED_DELTA);
         assertEquals(relativeFrame, event2.getFrame());
+    }
+
+    @Test
+    void testToString() {
+        assertEquals("event1, at (x, t) = (0.0, 0.0), in Stationary Frame", event1.toString());
+        assertEquals("event2, at (x, t) = (4.0, 9.0), in Stationary Frame", event2.toString());
+        assertEquals("event3, at (x, t) = (5.0, 1.0), in rf", event3.toString());
     }
 }

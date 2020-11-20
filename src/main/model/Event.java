@@ -5,6 +5,7 @@ import persistence.Writable;
 
 import static model.World.ALLOWED_DELTA;
 
+// Represents an event in spacetime with time and x position defined in a certain reference frame.
 public class Event implements Writable {
     private String name;
     private double time;
@@ -72,7 +73,7 @@ public class Event implements Writable {
 
     // REQUIRES: frame is reachable from this.frame
     // MODIFIES: this
-    // EFFECTS: changes this event's reference frame to frame.
+    // EFFECTS: changes this event's reference frame to frame
     public void changeFrame(ReferenceFrame frame) {
         Event transformedEvent = lorentzTransform(frame);
         this.time = transformedEvent.getTime();
@@ -80,6 +81,7 @@ public class Event implements Writable {
         this.frame = frame;
     }
 
+    // EFFECTS: returns a JSONObject containing this event's name, time, x position, and frame
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
@@ -88,5 +90,11 @@ public class Event implements Writable {
         jsonObject.put("x", this.getX());
         jsonObject.put("frame", this.getFrame().getName());
         return jsonObject;
+    }
+
+    // EFFECTS: returns a string comprised of this event's name, time, x position, and frame
+    @Override
+    public String toString() {
+        return name + ", at (x, t) = (" + this.posX + ", " + this.time + "), in " + this.frame + "";
     }
 }

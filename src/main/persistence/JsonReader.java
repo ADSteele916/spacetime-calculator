@@ -4,6 +4,7 @@ import model.Event;
 import model.ReferenceFrame;
 import model.RelativeFrame;
 import model.World;
+import model.exceptions.FasterThanLightException;
 import persistence.exceptions.InvalidDataException;
 import model.exceptions.NameInUseException;
 import org.json.JSONArray;
@@ -68,7 +69,7 @@ public class JsonReader {
         double velocity = jsonObject.getDouble("velocity");
         try {
             world.getMasterFrame().boost(name, velocity);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             throw new InvalidDataException();
         }
     }
@@ -95,7 +96,7 @@ public class JsonReader {
         if (frameName.equals("Stationary Frame")) {
             frame = world.getMasterFrame();
         } else {
-            for (RelativeFrame relativeFrame : world.getFrames()) {
+            for (RelativeFrame relativeFrame : world.getRelativeFrames()) {
                 if (relativeFrame.getName().equals(frameName)) {
                     frame = relativeFrame;
                     break;

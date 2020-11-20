@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.FasterThanLightException;
 import model.exceptions.NameInUseException;
 
 import java.util.ArrayList;
@@ -7,6 +8,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
+// Represents a stationary referency frame relative to which others are defined
 public class MasterFrame extends ReferenceFrame {
     private List<RelativeFrame> relativeFrames;
 
@@ -44,9 +46,12 @@ public class MasterFrame extends ReferenceFrame {
     }
 
     @Override
-    public RelativeFrame boost(String name, double v) throws NameInUseException {
+    public RelativeFrame boost(String name, double v) throws NameInUseException, FasterThanLightException {
         if (getFrameNames().contains(name)) {
             throw new NameInUseException();
+        }
+        if (Math.abs(v) >= 1) {
+            throw new FasterThanLightException();
         }
         RelativeFrame frame = new RelativeFrame(name, v, this);
         addRelativeFrame(frame);

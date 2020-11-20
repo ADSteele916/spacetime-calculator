@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.FasterThanLightException;
 import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -17,36 +18,59 @@ class WorldTest {
     }
 
     @Test
-    void testGetFramesEmpty() {
-        assertEquals(0, world.getFrames().size());
+    void testGetRelativeFramesEmpty() {
+        assertEquals(0, world.getRelativeFrames().size());
     }
 
     @Test
-    void testGetFramesOne() {
+    void testGetRelativeFramesOne() {
         try {
             world.getMasterFrame().boost("rf1", 0.5);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
-        assertEquals(1, world.getFrames().size());
-        assertEquals(0.5, world.getFrames().get(0).getVelocity(), ALLOWED_DELTA);
+        assertEquals(1, world.getRelativeFrames().size());
+        assertEquals(0.5, world.getRelativeFrames().get(0).getVelocity(), ALLOWED_DELTA);
     }
 
     @Test
-    void testGetFramesMany() {
+    void testGetRelativeFramesMany() {
         try {
             world.getMasterFrame().boost("rf1", 0.5);
             world.getMasterFrame().boost("rf2", 0.75);
             world.getMasterFrame().boost("rf3", -0.25);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
-        assertEquals(3, world.getFrames().size());
-        assertEquals(0.5, world.getFrames().get(0).getVelocity(), ALLOWED_DELTA);
-        assertEquals(0.75, world.getFrames().get(1).getVelocity(), ALLOWED_DELTA);
-        assertEquals(-0.25, world.getFrames().get(2).getVelocity(), ALLOWED_DELTA);
+        assertEquals(3, world.getRelativeFrames().size());
+        assertEquals(0.5, world.getRelativeFrames().get(0).getVelocity(), ALLOWED_DELTA);
+        assertEquals(0.75, world.getRelativeFrames().get(1).getVelocity(), ALLOWED_DELTA);
+        assertEquals(-0.25, world.getRelativeFrames().get(2).getVelocity(), ALLOWED_DELTA);
+    }
+
+    @Test
+    void testGetAllFramesOne() {
+        assertEquals(1, world.getAllFrames().size());
+        assertEquals(world.getMasterFrame(), world.getAllFrames().get(0));
+    }
+
+    @Test
+    void testGetAllFramesMany() {
+        try {
+            world.getMasterFrame().boost("rf1", 0.5);
+            world.getMasterFrame().boost("rf2", 0.75);
+            world.getMasterFrame().boost("rf3", -0.25);
+        } catch (NameInUseException | FasterThanLightException e) {
+            e.printStackTrace();
+            fail();
+        }
+        assertEquals(4, world.getAllFrames().size());
+        assertEquals(world.getMasterFrame(), world.getAllFrames().get(0));
+        assertEquals(0.5, world.getAllFrames().get(1).getVelocity(), ALLOWED_DELTA);
+        assertEquals(0.75, world.getAllFrames().get(2).getVelocity(), ALLOWED_DELTA);
+        assertEquals(-0.25, world.getAllFrames().get(3).getVelocity(), ALLOWED_DELTA);
     }
 
     @Test

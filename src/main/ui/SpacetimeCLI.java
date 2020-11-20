@@ -1,6 +1,7 @@
 package ui;
 
 import model.*;
+import model.exceptions.FasterThanLightException;
 import persistence.exceptions.InvalidDataException;
 import model.exceptions.NameInUseException;
 import persistence.JsonReader;
@@ -101,7 +102,7 @@ public class SpacetimeCLI {
         System.out.println("\nFrames:");
         MasterFrame master = world.getMasterFrame();
         System.out.println(master.getName() + " moving at " + master.getVelocity() + "c.");
-        for (ReferenceFrame frame: world.getFrames()) {
+        for (ReferenceFrame frame: world.getRelativeFrames()) {
             String speed = " moving at " + frame.getVelocity() + "c relative to " + master.getName() + ".";
             System.out.println(frame.getName() + speed);
         }
@@ -128,8 +129,9 @@ public class SpacetimeCLI {
             frame.boost(name, v);
             System.out.println("Frame added!");
         } catch (NameInUseException e) {
-            e.printStackTrace();
             System.out.println("A frame with that name already exists!");
+        } catch (FasterThanLightException e) {
+            System.out.println("Nothing can move as quickly as light!");
         }
     }
 
@@ -228,8 +230,8 @@ public class SpacetimeCLI {
     private ReferenceFrame selectFrame(String prompt) {
         System.out.println("\n" + prompt);
         System.out.println("(0) " + world.getMasterFrame().getName());
-        for (int i = 0; i < world.getFrames().size(); i++) {
-            RelativeFrame relativeFrame = world.getFrames().get(i);
+        for (int i = 0; i < world.getRelativeFrames().size(); i++) {
+            RelativeFrame relativeFrame = world.getRelativeFrames().get(i);
             String listNumber = "(" + (i + 1) + ") ";
             String frameName = relativeFrame.getName();
             String speed = " moving at " + relativeFrame.getVelocity() + "c relative to the Stationary Frame";
@@ -239,8 +241,8 @@ public class SpacetimeCLI {
 
         if (index == 0) {
             return world.getMasterFrame();
-        } else if ((index > 0) && (index <= world.getFrames().size())) {
-            return world.getFrames().get(index - 1);
+        } else if ((index > 0) && (index <= world.getRelativeFrames().size())) {
+            return world.getRelativeFrames().get(index - 1);
         } else {
             System.out.println("Invalid frame.");
             return selectFrame(prompt);
@@ -250,8 +252,8 @@ public class SpacetimeCLI {
     // EFFECTS: prompts the user to select any RelativeFrame in the world
     private RelativeFrame selectRelativeFrame(String prompt) {
         System.out.println("\n" + prompt);
-        for (int i = 0; i < world.getFrames().size(); i++) {
-            RelativeFrame relativeFrame = world.getFrames().get(i);
+        for (int i = 0; i < world.getRelativeFrames().size(); i++) {
+            RelativeFrame relativeFrame = world.getRelativeFrames().get(i);
             String listNumber = "(" + i + ") ";
             String frameName = relativeFrame.getName();
             String speed = " moving at " + relativeFrame.getVelocity() + "c relative to the Stationary Frame";
@@ -259,8 +261,8 @@ public class SpacetimeCLI {
         }
         int index = input.nextInt();
 
-        if ((index >= 0) && (index <= world.getFrames().size())) {
-            return world.getFrames().get(index);
+        if ((index >= 0) && (index <= world.getRelativeFrames().size())) {
+            return world.getRelativeFrames().get(index);
         } else {
             System.out.println("Invalid frame.");
             return selectRelativeFrame(prompt);

@@ -1,4 +1,4 @@
-# Spacetime Visualizer
+# Spacetime Calculator
 
 ## What will the application do?
 

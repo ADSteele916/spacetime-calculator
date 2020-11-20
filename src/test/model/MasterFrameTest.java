@@ -1,5 +1,6 @@
 package model;
 
+import model.exceptions.FasterThanLightException;
 import model.exceptions.NameInUseException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -30,7 +31,7 @@ class MasterFrameTest {
     void testGetRelativeFramesOne() {
         try {
             masterFrame.boost("rf1", 0.2);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -43,7 +44,7 @@ class MasterFrameTest {
             masterFrame.boost("rf1", 0.2);
             masterFrame.boost("rf2", -0.9);
             masterFrame.boost("rf3", 0.64);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -57,7 +58,7 @@ class MasterFrameTest {
         try {
             frame1 = masterFrame.boost("rf1", 0.2);
             frame2 = masterFrame.boost("rf2", -0.5);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -82,7 +83,7 @@ class MasterFrameTest {
         RelativeFrame boostedFrame = null;
         try {
             boostedFrame = masterFrame.boost("bf", 0.4);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }
@@ -92,12 +93,28 @@ class MasterFrameTest {
     }
 
     @Test
-    void testBoostFail() {
+    void testBoostFailNameInUse() {
         try {
             masterFrame.boost("bf", 0.4);
             masterFrame.boost("bf", 0.4);
             fail();
         } catch (NameInUseException e) {
+            // pass
+        } catch (FasterThanLightException e) {
+            e.printStackTrace();
+            fail();
+        }
+    }
+
+    @Test
+    void testBoostFailFasterThanLight() {
+        try {
+            masterFrame.boost("bf", 1.4);
+            fail();
+        } catch (NameInUseException e) {
+            e.printStackTrace();
+            fail();
+        } catch (FasterThanLightException e) {
             // pass
         }
     }
@@ -112,7 +129,7 @@ class MasterFrameTest {
         RelativeFrame boostedFrame = null;
         try {
             boostedFrame = masterFrame.boost("bf", 0.39);
-        } catch (NameInUseException e) {
+        } catch (NameInUseException | FasterThanLightException e) {
             e.printStackTrace();
             fail();
         }

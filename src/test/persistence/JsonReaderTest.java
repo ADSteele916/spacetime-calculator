@@ -74,7 +74,7 @@ public class JsonReaderTest extends JsonTest {
         JsonReader reader = new JsonReader("./data/testReaderEmptyWorld.json");
         try {
             world = reader.read();
-            assertEquals(0, world.getFrames().size());
+            assertEquals(0, world.getRelativeFrames().size());
             assertEquals(0, world.getEvents().size());
         } catch (IOException e) {
             e.printStackTrace();
@@ -90,8 +90,8 @@ public class JsonReaderTest extends JsonTest {
         JsonReader reader = new JsonReader("./data/testReaderWorldManyEventsFrames.json");
         try {
             world = reader.read();
-            checkFrame("Frame1", 0.5, world.getFrames().get(0));
-            checkFrame("Frame2", 0.9655172413793103, world.getFrames().get(1));
+            checkFrame("Frame1", 0.5, world.getRelativeFrames().get(0));
+            checkFrame("Frame2", 0.9655172413793103, world.getRelativeFrames().get(1));
             checkEvent("Event1", 2, 3, world.getEvents().get(0));
             assertEquals("Stationary Frame", world.getEvents().get(0).getFrame().getName());
             checkEvent("Event2", 6, -2, world.getEvents().get(1));

@@ -7,6 +7,7 @@ import persistence.Writable;
 import java.util.ArrayList;
 import java.util.List;
 
+// Represents a world containing arbitrary events and reference frames.
 public class World implements Writable {
 
     public static final double ALLOWED_DELTA = 0.000001;
@@ -26,8 +27,16 @@ public class World implements Writable {
     }
 
     // EFFECTS: returns a list of all of the reference frames accessible from the world's master frame
-    public List<RelativeFrame> getFrames() {
+    public List<RelativeFrame> getRelativeFrames() {
         return masterFrame.getRelativeFrames();
+    }
+
+    // EFFECTS: returns the world's master frame and all its relative frames in a list
+    public List<ReferenceFrame> getAllFrames() {
+        List<ReferenceFrame> frames = new ArrayList<>();
+        frames.add(getMasterFrame());
+        frames.addAll(getRelativeFrames());
+        return frames;
     }
 
     // EFFECTS: returns a list of all of the events in the world
@@ -41,10 +50,12 @@ public class World implements Writable {
         events.add(event);
     }
 
+    // EFFECTS: removes an event from the world
     public void removeEvent(Event event) {
         events.remove(event);
     }
 
+    // EFFECTS: creates a JSONObject containing the world's relative frames and events.
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
@@ -56,7 +67,7 @@ public class World implements Writable {
     // EFFECTS: returns a JSONArray of JSON objects for the world's reference frames
     private JSONArray framesToJson() {
         JSONArray jsonArray = new JSONArray();
-        for (RelativeFrame frame: this.getFrames()) {
+        for (RelativeFrame frame: this.getRelativeFrames()) {
             jsonArray.put(frame.toJson());
         }
         return jsonArray;

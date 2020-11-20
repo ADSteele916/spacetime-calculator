@@ -1,9 +1,11 @@
 package model;
 
+import model.exceptions.FasterThanLightException;
 import model.exceptions.NameInUseException;
 import org.json.JSONObject;
 import persistence.Writable;
 
+// Represents a reference frame defined relative to a master frame.
 public class RelativeFrame extends ReferenceFrame implements Writable {
     private MasterFrame masterFrame;
 
@@ -18,10 +20,14 @@ public class RelativeFrame extends ReferenceFrame implements Writable {
     }
 
     @Override
-    public RelativeFrame boost(String name, double v) throws NameInUseException {
+    public RelativeFrame boost(String name, double v) throws NameInUseException, FasterThanLightException {
         if (getMasterFrame().getFrameNames().contains(name)) {
             throw new NameInUseException();
         }
+        if (Math.abs(v) >= 1) {
+            throw new FasterThanLightException();
+        }
+
         double addedVelocity = (getVelocity() + v) / (1 +  getVelocity() * v);
         RelativeFrame frame = new RelativeFrame(name, addedVelocity, getMasterFrame());
         getMasterFrame().addRelativeFrame(frame);
@@ -33,6 +39,7 @@ public class RelativeFrame extends ReferenceFrame implements Writable {
         return (this.getVelocity() - frame.getVelocity()) / (1 - this.getVelocity() * frame.getVelocity());
     }
 
+    // EFFECTS: returns a JSONObject containing this event's name and velocity
     @Override
     public JSONObject toJson() {
         JSONObject jsonObject = new JSONObject();
