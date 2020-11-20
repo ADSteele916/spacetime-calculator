@@ -112,4 +112,9 @@ class RelativeFrameTest {
         }
         assertEquals(0.8, relativeFrame.relativeVelocityTo(frameInOtherDirection), ALLOWED_DELTA);
     }
+
+    @Test
+    void testToString() {
+        assertEquals("rf moving at 0.5c relative to Stationary Frame", relativeFrame.toString());
+    }
 }

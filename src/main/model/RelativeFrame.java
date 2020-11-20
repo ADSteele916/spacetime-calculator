@@ -47,4 +47,10 @@ public class RelativeFrame extends ReferenceFrame implements Writable {
         jsonObject.put("velocity", this.getVelocity());
         return jsonObject;
     }
+
+    // EFFECTS: returns a string comprised of this frame's name, velocity, and master
+    @Override
+    public String toString() {
+        return getName() + " moving at " + getVelocity() + "c relative to " + getMasterFrame();
+    }
 }

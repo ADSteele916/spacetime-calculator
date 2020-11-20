@@ -95,6 +95,6 @@ public class Event implements Writable {
     // EFFECTS: returns a string comprised of this event's name, time, x position, and frame
     @Override
     public String toString() {
-        return name + ", at (x, t) = (" + this.posX + ", " + this.time + "), in " + this.frame + "";
+        return name + ", at (x, t) = (" + this.posX + ", " + this.time + "), in " + this.frame.getName() + "";
     }
 }

@@ -15,7 +15,7 @@ import java.util.Scanner;
 
 import static model.World.ALLOWED_DELTA;
 
-
+// A runnable command line interface for the Spacetime Calculator
 // Structure of runApp, showCommands, and execute methods from TellerApp example
 public class SpacetimeCLI {
     private static final String JSON_STORE = "./data/world.json";

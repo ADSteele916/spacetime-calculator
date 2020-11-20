@@ -6,8 +6,10 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+// Represents a button that saves a world to disk
 public class SaveButton extends Button {
 
+    // EFFECTS: constructs an SaveButton with given ui and parent component
     public SaveButton(SpacetimeGUI ui, JComponent parent) {
         super(ui, parent);
     }
@@ -24,6 +26,7 @@ public class SaveButton extends Button {
 
     private class SaveButtonClickHandler implements ActionListener {
 
+        // EFFECTS: plays a sound and saves the world to file
         @Override
         public void actionPerformed(ActionEvent e) {
             ui.buttonNoise();

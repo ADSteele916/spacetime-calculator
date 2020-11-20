@@ -135,4 +135,9 @@ class MasterFrameTest {
         }
         assertEquals(-0.39, masterFrame.relativeVelocityTo(boostedFrame), ALLOWED_DELTA);
     }
+
+    @Test
+    void testToString() {
+        assertEquals("Stationary Frame", masterFrame.toString());
+    }
 }

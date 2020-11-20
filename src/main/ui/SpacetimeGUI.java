@@ -25,6 +25,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+// A runnable graphical user interface for the Spacetime Calculator
 public class SpacetimeGUI extends JFrame implements ListSelectionListener {
 
     private static final String JSON_STORE = "./data/world.json";
@@ -44,12 +45,15 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
     private DefaultListModel<Event> eventListModel;
     private TransformTableModel transformTableModel;
 
+    // EFFECTS: constructs and opens the GUI
     public SpacetimeGUI() {
-        super("Spacetime Visualizer");
+        super("Spacetime Calculator");
         setupFields();
         setupGraphics();
     }
 
+    // MODIFIES: this
+    // EFFECTS: sets initial values for the SpacetimeGUI's fields.
     private void setupFields() {
         world = new World();
         currentFrame = world.getMasterFrame();
@@ -57,17 +61,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         jsonWriter = new JsonWriter(JSON_STORE);
     }
 
-    public void buttonNoise() {
-        try {
-            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(BUTTON_SOUND_FILE);
-            Clip clip = AudioSystem.getClip();
-            clip.open(audioInputStream);
-            clip.start();
-        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
-            e.printStackTrace();
-        }
-    }
-
+    // MODIFIES: this
+    // EFFECTS: instantiates the GUI
     private void setupGraphics() {
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
@@ -80,6 +75,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         setVisible(true);
     }
 
+    // MODIFIES: this
+    // EFFECTS: instantiates the GUI's table of event positions in spacetime
     private void setupTable() {
         transformTableModel = new TransformTableModel();
         JTable table = new JTable();
@@ -92,6 +89,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         add(tableArea, BorderLayout.CENTER);
     }
 
+    // MODIFIES: this
+    // EFFECTS: instantiates the GUI's panels containing lists of events and frames
     private void setupPanels() {
         JPanel worldArea = new JPanel();
         worldArea.setLayout(new GridLayout(0, 2));
@@ -107,6 +106,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
 
     }
 
+    // MODIFIES: this
+    // EFFECTS: instantiates the GUI's list of frames
     private void setupFrames() {
         frameListModel = new DefaultListModel<>();
         frameListModel.addElement(world.getMasterFrame());
@@ -116,12 +117,16 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         frameList.setSelectedIndex(0);
     }
 
+    // MODIFIES: this
+    // EFFECTS: instantiates the GUI's list of events
     private void setupEvents() {
         eventListModel = new DefaultListModel<>();
         eventList = new JList<>(eventListModel);
         eventList.setSelectionModel(new NoSelectionModel());
     }
 
+    // MODIFIES: this
+    // EFFECTS: instantiates the GUI's buttons
     private void setupButtons() {
         JPanel buttonArea = new JPanel();
         buttonArea.setLayout(new GridLayout(3, 2));
@@ -135,10 +140,14 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         new LoadButton(this, buttonArea);
     }
 
+    // MODIFIES: this
+    // EFFECTS: updates transformTableModel's data
     private void updateTable() {
         transformTableModel.setData(world.getEvents(), currentFrame);
     }
 
+    // MODIFIES: this
+    // EFFECTS: clears and repopulates frameListModel with all of the world's reference frames
     private void updateFrames() {
         frameListModel.clear();
         for (ReferenceFrame frame: world.getAllFrames()) {
@@ -147,6 +156,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         updateTable();
     }
 
+    // MODIFIES: this
+    // EFFECTS: clears and repopulates eventListModel with all of the world's events
     private void updateEvents() {
         eventListModel.clear();
         for (Event event: world.getEvents()) {
@@ -155,6 +166,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         updateTable();
     }
 
+    // MODIFIES: this
+    // EFFECTS: prompts the user to add a reference frame to the world
     public void addFrame() {
         try {
             String name = stringPrompt("What is the frame's name?");
@@ -181,6 +194,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         updateFrames();
     }
 
+    // MODIFIES: this
+    // EFFECTS: prompts the user to add an event to the world
     public void addEvent() {
         try {
             String name = stringPrompt("What is the frame's name?");
@@ -301,6 +316,18 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         }
         updateEvents();
         updateFrames();
+    }
+
+    // EFFECTS: plays a "click" noise
+    public void buttonNoise() {
+        try {
+            AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(BUTTON_SOUND_FILE);
+            Clip clip = AudioSystem.getClip();
+            clip.open(audioInputStream);
+            clip.start();
+        } catch (LineUnavailableException | IOException | UnsupportedAudioFileException e) {
+            e.printStackTrace();
+        }
     }
 
     // MODIFIES: this
