@@ -40,16 +40,18 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
     private JsonWriter jsonWriter;
 
     private DefaultListModel<ReferenceFrame> frameListModel;
-    JList<Event> eventList;
-    JList<ReferenceFrame> frameList;
+    private JList<Event> eventList;
+    private JList<ReferenceFrame> frameList;
     private DefaultListModel<Event> eventListModel;
     private TransformTableModel transformTableModel;
+    private JPanel uiPanel;
 
     // EFFECTS: constructs and opens the GUI
     public SpacetimeGUI() {
         super("Spacetime Calculator");
         setupFields();
         setupGraphics();
+        updateEvents();
     }
 
     // MODIFIES: this
@@ -59,6 +61,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         currentFrame = world.getMasterFrame();
         jsonReader = new JsonReader(JSON_STORE);
         jsonWriter = new JsonWriter(JSON_STORE);
+        uiPanel = new JPanel();
+        uiPanel.setLayout(new BoxLayout(uiPanel, BoxLayout.PAGE_AXIS));
     }
 
     // MODIFIES: this
@@ -66,6 +70,7 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
     private void setupGraphics() {
         setLayout(new BorderLayout());
         setMinimumSize(new Dimension(WIDTH, HEIGHT));
+        add(uiPanel);
         setupTable();
         setupPanels();
         setupButtons();
@@ -85,8 +90,9 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
 
         JScrollPane tableScrollPane = new JScrollPane(table);
         JPanel tableArea = new JPanel();
+        tableArea.setLayout(new GridLayout(1, 1));
         tableArea.add(tableScrollPane);
-        add(tableArea, BorderLayout.CENTER);
+        uiPanel.add(tableScrollPane, BorderLayout.CENTER);
     }
 
     // MODIFIES: this
@@ -94,7 +100,8 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
     private void setupPanels() {
         JPanel worldArea = new JPanel();
         worldArea.setLayout(new GridLayout(0, 2));
-        add(worldArea, BorderLayout.NORTH);
+        worldArea.setPreferredSize(new Dimension(0, 300));
+        uiPanel.add(worldArea, BorderLayout.NORTH);
 
         setupFrames();
         JScrollPane frameScrollPane = new JScrollPane(frameList);
@@ -130,7 +137,7 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
     private void setupButtons() {
         JPanel buttonArea = new JPanel();
         buttonArea.setLayout(new GridLayout(3, 2));
-        add(buttonArea, BorderLayout.SOUTH);
+        uiPanel.add(buttonArea, BorderLayout.SOUTH);
 
         new AddFrameButton(this, buttonArea);
         new AddEventButton(this, buttonArea);
@@ -337,6 +344,7 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         if (!e.getValueIsAdjusting()) {
             if (frameList.getSelectedIndex() == -1) {
                 currentFrame = world.getMasterFrame();
+                frameList.setSelectedIndex(0);
             } else {
                 currentFrame = world.getAllFrames().get(frameList.getSelectedIndex());
             }
