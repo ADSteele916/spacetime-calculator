@@ -25,6 +25,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static model.World.ALLOWED_DELTA;
+
 // A runnable graphical user interface for the Spacetime Calculator
 public class SpacetimeGUI extends JFrame implements ListSelectionListener {
 
@@ -145,6 +147,7 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
         new RemoveEventButton(this, buttonArea);
         new SaveButton(this, buttonArea);
         new LoadButton(this, buttonArea);
+        new InvariantButton(this, buttonArea);
     }
 
     // MODIFIES: this
@@ -253,6 +256,31 @@ public class SpacetimeGUI extends JFrame implements ListSelectionListener {
                 return;
             }
             updateEvents();
+        }
+    }
+
+    public void lorentzInvariant() {
+        if (!world.getEvents().isEmpty()) {
+            try {
+                Event event1 = eventPrompt("What is the first event?", world.getEvents());
+                Event event2 = eventPrompt("What is the second event?", world.getEvents());
+                double invariant = event1.lorentzInvariant(event2);
+                String out = "The Lorentz Invariant of " + event1.getName() + " and " + event2.getName() + " is "
+                        + invariant + ". ";
+                String separation;
+                if (Math.abs(invariant) < ALLOWED_DELTA) {
+                    separation = "null";
+                } else if (invariant > 0) {
+                    separation = "spacelike";
+                } else {
+                    separation = "timelike";
+                }
+                String separated = "This means that the two events are " + separation + " separated.";
+                JOptionPane.showMessageDialog(this, out + separated, "",
+                        JOptionPane.PLAIN_MESSAGE);
+            } catch (PopupCancelException e) {
+                return;
+            }
         }
     }
 
